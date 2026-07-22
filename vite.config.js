@@ -3,17 +3,9 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  root: '.',
   build: {
     outDir: 'dist',
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          supabase: ['@supabase/supabase-js'],
-          stripe: ['@stripe/stripe-js', '@stripe/react-stripe-js'],
-        }
-      }
-    }
   },
   server: {
     port: 3000
