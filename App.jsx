@@ -1,44 +1,43 @@
-import { useState, useEffect, createContext, useContext, lazy, Suspense } from 'react'
+import { useState, createContext, useContext, lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
 export const VoxaContext = createContext(null)
 export const useVoxa = () => useContext(VoxaContext)
 
-// Lazy imports — apuntan a la raíz donde están los módulos
-const Landing         = lazy(() => import('./voxa-landing'))
-const Auth            = lazy(() => import('./voxa-auth'))
-const Onboarding      = lazy(() => import('./voxa-onboarding'))
-const Dashboard       = lazy(() => import('./voxa-dashboard'))
-const Generador       = lazy(() => import('./voxa-generador-bilingue'))
-const BusinessBrain   = lazy(() => import('./voxa-business-brain'))
-const Predict         = lazy(() => import('./voxa-predict'))
-const Autopilot       = lazy(() => import('./voxa-autopilot'))
-const Agentes         = lazy(() => import('./voxa-agentes'))
-const Intelligence    = lazy(() => import('./voxa-intelligence'))
-const ClonePro        = lazy(() => import('./voxa-clone-pro'))
-const Creativos       = lazy(() => import('./voxa-creativos'))
-const BrandKit        = lazy(() => import('./voxa-brandkit'))
-const Multiformato    = lazy(() => import('./voxa-multiformato'))
-const Calendario      = lazy(() => import('./voxa-calendario'))
-const ROI             = lazy(() => import('./voxa-roi'))
-const Express         = lazy(() => import('./voxa-express'))
-const Politico        = lazy(() => import('./voxa-politico'))
-const OnbPolitico     = lazy(() => import('./voxa-onboarding-politico'))
-const Recargas        = lazy(() => import('./voxa-recargas'))
-const Afiliados       = lazy(() => import('./voxa-afiliados'))
-const Agency          = lazy(() => import('./voxa-agency'))
-const Marketplace     = lazy(() => import('./voxa-marketplace'))
-const Growth          = lazy(() => import('./voxa-growth'))
-const Retencion       = lazy(() => import('./voxa-retencion'))
-const Progreso        = lazy(() => import('./voxa-progreso'))
-const ABTesting       = lazy(() => import('./voxa-abtesting'))
-const Notificaciones  = lazy(() => import('./voxa-notificaciones'))
-const Cancelacion     = lazy(() => import('./voxa-cancelacion'))
-const Asistente       = lazy(() => import('./voxa-asistente'))
-const Legales         = lazy(() => import('./voxa-legales'))
-const CodigosBeta     = lazy(() => import('./voxa-codigos-beta'))
-const Blocked         = lazy(() => import('./voxa-blocked'))
-const DarkMode        = lazy(() => import('./voxa-darkmode'))
+const Landing         = lazy(() => import('./voxa-landing.jsx'))
+const Auth            = lazy(() => import('./voxa-auth.jsx'))
+const Onboarding      = lazy(() => import('./voxa-onboarding.jsx'))
+const Dashboard       = lazy(() => import('./voxa-dashboard.jsx'))
+const Generador       = lazy(() => import('./voxa-generador-bilingue.jsx'))
+const BusinessBrain   = lazy(() => import('./voxa-business-brain.jsx'))
+const Predict         = lazy(() => import('./voxa-predict.jsx'))
+const Autopilot       = lazy(() => import('./voxa-autopilot.jsx'))
+const Agentes         = lazy(() => import('./voxa-agentes.jsx'))
+const Intelligence    = lazy(() => import('./voxa-intelligence.jsx'))
+const ClonePro        = lazy(() => import('./voxa-clone-pro.jsx'))
+const Creativos       = lazy(() => import('./voxa-creativos.jsx'))
+const BrandKit        = lazy(() => import('./voxa-brandkit.jsx'))
+const Multiformato    = lazy(() => import('./voxa-multiformato.jsx'))
+const Calendario      = lazy(() => import('./voxa-calendario.jsx'))
+const ROI             = lazy(() => import('./voxa-roi.jsx'))
+const Express         = lazy(() => import('./voxa-express.jsx'))
+const Politico        = lazy(() => import('./voxa-politico.jsx'))
+const OnbPolitico     = lazy(() => import('./voxa-onboarding-politico.jsx'))
+const Recargas        = lazy(() => import('./voxa-recargas.jsx'))
+const Afiliados       = lazy(() => import('./voxa-afiliados.jsx'))
+const Agency          = lazy(() => import('./voxa-agency.jsx'))
+const Marketplace     = lazy(() => import('./voxa-marketplace.jsx'))
+const Growth          = lazy(() => import('./voxa-growth.jsx'))
+const Retencion       = lazy(() => import('./voxa-retencion.jsx'))
+const Progreso        = lazy(() => import('./voxa-progreso.jsx'))
+const ABTesting       = lazy(() => import('./voxa-abtesting.jsx'))
+const Notificaciones  = lazy(() => import('./voxa-notificaciones.jsx'))
+const Cancelacion     = lazy(() => import('./voxa-cancelacion.jsx'))
+const Asistente       = lazy(() => import('./voxa-asistente.jsx'))
+const Legales         = lazy(() => import('./voxa-legales.jsx'))
+const CodigosBeta     = lazy(() => import('./voxa-codigos-beta.jsx'))
+const Blocked         = lazy(() => import('./voxa-blocked.jsx'))
+const DarkMode        = lazy(() => import('./voxa-darkmode.jsx'))
 
 function VoxaLoader() {
   return (
@@ -48,11 +47,6 @@ function VoxaLoader() {
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
     </div>
   )
-}
-
-function Protected({ children }) {
-  // Por ahora sin auth — lo conectamos en el siguiente paso con Supabase
-  return children
 }
 
 function AppContent() {
@@ -66,37 +60,37 @@ function AppContent() {
           <Route path="/"                   element={<Landing />} />
           <Route path="/auth"               element={<Auth />} />
           <Route path="/legales"            element={<Legales />} />
-          <Route path="/app"                element={<Protected><Dashboard /></Protected>} />
-          <Route path="/app/dashboard"      element={<Protected><Dashboard /></Protected>} />
-          <Route path="/app/onboarding"     element={<Protected><Onboarding /></Protected>} />
-          <Route path="/app/generar"        element={<Protected><Generador /></Protected>} />
-          <Route path="/app/brain"          element={<Protected><BusinessBrain /></Protected>} />
-          <Route path="/app/predict"        element={<Protected><Predict /></Protected>} />
-          <Route path="/app/autopilot"      element={<Protected><Autopilot /></Protected>} />
-          <Route path="/app/agentes"        element={<Protected><Agentes /></Protected>} />
-          <Route path="/app/intelligence"   element={<Protected><Intelligence /></Protected>} />
-          <Route path="/app/clone"          element={<Protected><ClonePro /></Protected>} />
-          <Route path="/app/creativos"      element={<Protected><Creativos /></Protected>} />
-          <Route path="/app/brandkit"       element={<Protected><BrandKit /></Protected>} />
-          <Route path="/app/multiformato"   element={<Protected><Multiformato /></Protected>} />
-          <Route path="/app/calendario"     element={<Protected><Calendario /></Protected>} />
-          <Route path="/app/roi"            element={<Protected><ROI /></Protected>} />
-          <Route path="/app/express"        element={<Protected><Express /></Protected>} />
-          <Route path="/app/politico"       element={<Protected><Politico /></Protected>} />
-          <Route path="/app/politico/setup" element={<Protected><OnbPolitico /></Protected>} />
-          <Route path="/app/recargas"       element={<Protected><Recargas /></Protected>} />
-          <Route path="/app/afiliados"      element={<Protected><Afiliados /></Protected>} />
-          <Route path="/app/agency"         element={<Protected><Agency /></Protected>} />
-          <Route path="/app/marketplace"    element={<Protected><Marketplace /></Protected>} />
-          <Route path="/app/growth"         element={<Protected><Growth /></Protected>} />
-          <Route path="/app/semanal"        element={<Protected><Retencion /></Protected>} />
-          <Route path="/app/progreso"       element={<Protected><Progreso /></Protected>} />
-          <Route path="/app/abtesting"      element={<Protected><ABTesting /></Protected>} />
-          <Route path="/app/notificaciones" element={<Protected><Notificaciones /></Protected>} />
-          <Route path="/app/cancelar"       element={<Protected><Cancelacion /></Protected>} />
-          <Route path="/app/asistente"      element={<Protected><Asistente /></Protected>} />
-          <Route path="/app/darkmode"       element={<Protected><DarkMode /></Protected>} />
-          <Route path="/app/beta"           element={<Protected><CodigosBeta /></Protected>} />
+          <Route path="/app"                element={<Dashboard />} />
+          <Route path="/app/dashboard"      element={<Dashboard />} />
+          <Route path="/app/onboarding"     element={<Onboarding />} />
+          <Route path="/app/generar"        element={<Generador />} />
+          <Route path="/app/brain"          element={<BusinessBrain />} />
+          <Route path="/app/predict"        element={<Predict />} />
+          <Route path="/app/autopilot"      element={<Autopilot />} />
+          <Route path="/app/agentes"        element={<Agentes />} />
+          <Route path="/app/intelligence"   element={<Intelligence />} />
+          <Route path="/app/clone"          element={<ClonePro />} />
+          <Route path="/app/creativos"      element={<Creativos />} />
+          <Route path="/app/brandkit"       element={<BrandKit />} />
+          <Route path="/app/multiformato"   element={<Multiformato />} />
+          <Route path="/app/calendario"     element={<Calendario />} />
+          <Route path="/app/roi"            element={<ROI />} />
+          <Route path="/app/express"        element={<Express />} />
+          <Route path="/app/politico"       element={<Politico />} />
+          <Route path="/app/politico/setup" element={<OnbPolitico />} />
+          <Route path="/app/recargas"       element={<Recargas />} />
+          <Route path="/app/afiliados"      element={<Afiliados />} />
+          <Route path="/app/agency"         element={<Agency />} />
+          <Route path="/app/marketplace"    element={<Marketplace />} />
+          <Route path="/app/growth"         element={<Growth />} />
+          <Route path="/app/semanal"        element={<Retencion />} />
+          <Route path="/app/progreso"       element={<Progreso />} />
+          <Route path="/app/abtesting"      element={<ABTesting />} />
+          <Route path="/app/notificaciones" element={<Notificaciones />} />
+          <Route path="/app/cancelar"       element={<Cancelacion />} />
+          <Route path="/app/asistente"      element={<Asistente />} />
+          <Route path="/app/darkmode"       element={<DarkMode />} />
+          <Route path="/app/beta"           element={<CodigosBeta />} />
           <Route path="/app/bloqueado"      element={<Blocked />} />
           <Route path="*"                   element={<Navigate to="/" replace />} />
         </Routes>
