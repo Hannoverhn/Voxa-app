@@ -1,401 +1,405 @@
 import { useState } from "react";
 
-const T = {
-  es: {
-    nav: { campaigns: "Campañas", analytics: "Analytics", creatives: "Creativos", channels: "Canales", billing: "Facturación", settings: "Ajustes" },
-    newCampaign: "⚡ Nueva campaña",
-    plan: "Plan Pro",
-    planSub: "Campañas ilimitadas",
-    trialEnds: "Tu prueba termina en",
-    days: "días",
-    upgrade: "Mejorar plan →",
-    stats: { spent: "Gasto total", conversions: "Conversiones", clicks: "Clics totales", impressions: "Impresiones", thisMonth: "este mes", allCampaigns: "todas las campañas", totalReach: "alcance total" },
-    table: { title: "Todas las campañas", count: "campañas", created: "Creado", budget: "de", convs: "conversiones" },
-    status: { activa: "activa", pausada: "pausada", borrador: "borrador" },
-    detail: { performance: "Rendimiento", budgetUsed: "Presupuesto usado", ctr: "CTR", cpa: "CPA promedio", impressions: "Impresiones", clicks: "Clics", conversions: "Conversiones", created: "Creado", activeCopies: "Copies activos", edit: "Editar", pause: "Pausar", activate: "Activar" },
-    empty: { title: "Crea tu primera campaña", sub: "Describe tu negocio y Voxa genera anuncios profesionales en 52 segundos.", btn: "⚡ Crear campaña" },
-    modal: { title: "Nueva campaña", sub: "Completa los pasos para crear tu campaña con IA en segundos.", steps: ["Describe tu negocio", "Elige el objetivo", "Define tu audiencia"], btn: "⚡ Generar con IA" },
-    comingSoon: "Esta sección está en construcción.",
-    back: "Volver a campañas",
-    welcome: "Bienvenido a Voxa",
-    welcomeSub: "Todo listo para crear tu primera campaña.",
-    searchPlaceholder: "Buscar campaña...",
-    filter: "Filtrar",
-    all: "Todas",
-    active: "Activas",
-    paused: "Pausadas",
-    draft: "Borradores",
-  },
-  en: {
-    nav: { campaigns: "Campaigns", analytics: "Analytics", creatives: "Creatives", channels: "Channels", billing: "Billing", settings: "Settings" },
-    newCampaign: "⚡ New campaign",
-    plan: "Pro Plan",
-    planSub: "Unlimited campaigns",
-    trialEnds: "Your trial ends in",
-    days: "days",
-    upgrade: "Upgrade plan →",
-    stats: { spent: "Total spent", conversions: "Conversions", clicks: "Total clicks", impressions: "Impressions", thisMonth: "this month", allCampaigns: "all campaigns", totalReach: "total reach" },
-    table: { title: "All campaigns", count: "campaigns", created: "Created", budget: "of", convs: "conversions" },
-    status: { activa: "active", pausada: "paused", borrador: "draft" },
-    detail: { performance: "Performance", budgetUsed: "Budget used", ctr: "CTR", cpa: "Avg. CPA", impressions: "Impressions", clicks: "Clicks", conversions: "Conversions", created: "Created", activeCopies: "Active copies", edit: "Edit", pause: "Pause", activate: "Activate" },
-    empty: { title: "Create your first campaign", sub: "Describe your business and Voxa generates professional ads in 52 seconds.", btn: "⚡ Create campaign" },
-    modal: { title: "New campaign", sub: "Complete the steps to create your AI campaign in seconds.", steps: ["Describe your business", "Choose your goal", "Define your audience"], btn: "⚡ Generate with AI" },
-    comingSoon: "This section is under construction.",
-    back: "Back to campaigns",
-    welcome: "Welcome to Voxa",
-    welcomeSub: "Everything is ready to create your first campaign.",
-    searchPlaceholder: "Search campaign...",
-    filter: "Filter",
-    all: "All",
-    active: "Active",
-    paused: "Paused",
-    draft: "Drafts",
-  }
+// ── TOKENS ────────────────────────────────────────────────────────────────
+const C = {
+  tinta:    "#26215C",
+  tintaDk:  "#1a1730",
+  tintaMd:  "#2e2870",
+  coral:    "#A32D2D",
+  coralLt:  "#c23535",
+  arena:    "#FAEEDA",
+  arenaMd:  "#F5C6A0",
+  glow:     "rgba(163,45,45,0.18)",
+  surface:  "rgba(255,255,255,0.04)",
+  surface2: "rgba(255,255,255,0.07)",
+  border:   "rgba(255,255,255,0.08)",
+  border2:  "rgba(255,255,255,0.14)",
+  text:     "#F5F3EF",
+  textSub:  "rgba(255,255,255,0.55)",
+  textMut:  "rgba(255,255,255,0.28)",
 };
 
-const CAMPAIGNS = [
-  { id: 1, name: "Ropa deportiva — ventas", nameEn: "Sportswear — sales", canal: "Meta", status: "activa", presupuesto: 150, gastado: 87, impresiones: 14320, clics: 412, conversiones: 28, ctr: 2.88, cpa: 18.5, created: "hace 3 días", createdEn: "3 days ago", copies: [{ titulo: "Tu mejor versión empieza aquí", cta: "Ver colección →" }, { titulo: "Ropa que te acompaña en cada meta", cta: "Comprar ahora →" }] },
-  { id: 2, name: "Lanzamiento invierno 2026", nameEn: "Winter 2026 launch", canal: "Google", status: "pausada", presupuesto: 200, gastado: 43, impresiones: 8900, clics: 198, conversiones: 11, ctr: 2.22, cpa: 22.1, created: "hace 6 días", createdEn: "6 days ago", copies: [{ titulo: "Nueva colección invierno 2026", cta: "Descubrir →" }] },
-  { id: 3, name: "Leads yoga — mujeres", nameEn: "Yoga leads — women", canal: "TikTok", status: "borrador", presupuesto: 80, gastado: 0, impresiones: 0, clics: 0, conversiones: 0, ctr: 0, cpa: 0, created: "hace 1 día", createdEn: "1 day ago", copies: [{ titulo: "Yoga para mujeres ocupadas", cta: "Quiero más info →" }] },
-  { id: 4, name: "Multi-canal — temporada", nameEn: "Multi-channel — season", canal: "Todos", status: "activa", presupuesto: 300, gastado: 201, impresiones: 31200, clics: 890, conversiones: 54, ctr: 3.12, cpa: 14.2, created: "hace 8 días", createdEn: "8 days ago", copies: [{ titulo: "La temporada más esperada llegó", cta: "Aprovechar oferta →" }] },
+const NAV_ITEMS = [
+  { icon: "⚡", label: { es: "Campañas", en: "Campaigns" }, path: "campaigns" },
+  { icon: "🧠", label: { es: "Business Brain", en: "Business Brain" }, path: "brain" },
+  { icon: "🎯", label: { es: "Voxa Predict", en: "Voxa Predict" }, path: "predict" },
+  { icon: "🚀", label: { es: "Autopilot", en: "Autopilot" }, path: "autopilot" },
+  { icon: "🤖", label: { es: "Agentes", en: "Agents" }, path: "agentes" },
+  { icon: "🔍", label: { es: "Clone Pro", en: "Clone Pro" }, path: "clone" },
+  { icon: "🎨", label: { es: "Creativos", en: "Creatives" }, path: "creativos" },
+  { icon: "📅", label: { es: "Calendario", en: "Calendar" }, path: "calendario" },
+  { icon: "📈", label: { es: "ROI", en: "ROI" }, path: "roi" },
+  { icon: "🏛️", label: { es: "Modo Político", en: "Political Mode" }, path: "politico" },
+  { icon: "🏢", label: { es: "Agencia", en: "Agency" }, path: "agency" },
+  { icon: "🌐", label: { es: "Intelligence", en: "Intelligence" }, path: "intelligence" },
 ];
 
-const STATUS_STYLE = {
-  activa:   { bg: "#f0fdf4", text: "#16a34a", dot: "#22c55e" },
-  pausada:  { bg: "#fefce8", text: "#b45309", dot: "#f59e0b" },
-  borrador: { bg: "#FFF5F0", text: "#A32D2D", dot: "#A32D2D" },
+const CAMPAIGNS = [
+  { id: 1, name: "Promo Navidad", platform: "Facebook", status: "active", score: 91, spent: 87, budget: 150, conv: 28, reach: "14.3K", color: "#1877F2" },
+  { id: 2, name: "Lanzamiento invierno", platform: "Google", status: "paused", score: 84, spent: 43, budget: 200, conv: 11, reach: "8.1K", color: "#4285F4" },
+  { id: 3, name: "Leads yoga", platform: "TikTok", status: "draft", score: 78, spent: 0, budget: 80, conv: 0, reach: "—", color: "#000000" },
+  { id: 4, name: "Multi-canal temporada", platform: "Meta", status: "active", score: 88, spent: 201, budget: 300, conv: 54, reach: "31.6K", color: "#A32D2D" },
+];
+
+const STATS = [
+  { value: "$331", label: { es: "Invertido este mes", en: "Invested this month" }, sub: "+12% vs. mes ant.", icon: "💰", color: C.arena },
+  { value: "93", label: { es: "Conversiones", en: "Conversions" }, sub: "en 4 campañas", icon: "🎯", color: "#86efac" },
+  { value: "54K", label: { es: "Alcance total", en: "Total reach" }, sub: "personas únicas", icon: "📣", color: "#7dd3fc" },
+  { value: "88", label: { es: "Voxa Score prom.", en: "Avg Voxa Score" }, sub: "+4 pts este mes", icon: "⚡", color: C.arenaMd },
+];
+
+const STATUS_CFG = {
+  active:  { es: "Activa",    en: "Active",  bg: "rgba(21,128,61,.15)",  color: "#86efac", dot: "#86efac" },
+  paused:  { es: "Pausada",   en: "Paused",  bg: "rgba(245,158,11,.12)", color: "#fcd34d", dot: "#fcd34d" },
+  draft:   { es: "Borrador",  en: "Draft",   bg: "rgba(99,102,241,.12)", color: "#a5b4fc", dot: "#a5b4fc" },
 };
 
-const CANAL_COLOR = { Meta: "#1877F2", Google: "#EA4335", TikTok: "#000", Todos: "#A32D2D" };
-
-function LangToggle({ lang, setLang }) {
+function ScorePill({ score }) {
+  const color = score >= 88 ? "#86efac" : score >= 75 ? "#fcd34d" : "#fca5a5";
   return (
-    <div style={{ display: "flex", background: "rgba(255,255,255,0.08)", borderRadius: 8, padding: 3, gap: 2 }}>
-      {["es","en"].map(l => (
-        <button key={l} onClick={() => setLang(l)} style={{ padding: "4px 10px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 11, fontWeight: 700, background: lang === l ? "rgba(255,255,255,0.15)" : "transparent", color: lang === l ? "white" : "rgba(255,255,255,0.4)", transition: "all .15s" }}>
-          {l === "es" ? "🇪🇸 ES" : "🇺🇸 EN"}
-        </button>
-      ))}
+    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+      <div style={{ width: 32, height: 32, borderRadius: "50%", background: `${color}18`, border: `1.5px solid ${color}40`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <span style={{ fontSize: 11, fontWeight: 900, color }}>{score}</span>
+      </div>
     </div>
   );
 }
 
-function MiniBar({ pct, color }) {
+function BudgetBar({ spent, budget, color = C.coral }) {
+  const pct = Math.min((spent / budget) * 100, 100);
   return (
-    <div style={{ background: "#f3f4f6", borderRadius: 4, height: 6, width: "100%", overflow: "hidden" }}>
-      <div style={{ width: `${Math.min(pct * 100, 100)}%`, height: "100%", background: color, borderRadius: 4, transition: "width .5s" }} />
-    </div>
-  );
-}
-
-function StatCard({ label, value, sub, accent }) {
-  return (
-    <div style={{ background: "white", border: "1px solid #e8e8f0", borderRadius: 12, padding: "16px 20px", flex: 1, minWidth: 110 }}>
-      <p style={{ fontSize: 11, color: "#9ca3af", fontWeight: 700, margin: "0 0 6px", textTransform: "uppercase", letterSpacing: "0.05em" }}>{label}</p>
-      <p style={{ fontSize: 26, fontWeight: 900, color: accent || "#08080a", margin: "0 0 2px", letterSpacing: "-0.03em", lineHeight: 1 }}>{value}</p>
-      {sub && <p style={{ fontSize: 11, color: "#9ca3af", margin: 0 }}>{sub}</p>}
+    <div style={{ width: "100%" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
+        <span style={{ fontSize: 11, color: C.textMut }}>${spent}</span>
+        <span style={{ fontSize: 11, color: C.textMut }}>${budget}</span>
+      </div>
+      <div style={{ height: 3, background: "rgba(255,255,255,0.08)", borderRadius: 2, overflow: "hidden" }}>
+        <div style={{ width: `${pct}%`, height: "100%", background: pct > 85 ? "#fcd34d" : color, borderRadius: 2, transition: "width .6s ease" }} />
+      </div>
     </div>
   );
 }
 
 export default function VoxaDashboard() {
   const [lang, setLang] = useState("es");
-  const [view, setView] = useState("campaigns");
-  const [selected, setSelected] = useState(CAMPAIGNS[0]);
-  const [showNew, setShowNew] = useState(false);
-  const [search, setSearch] = useState("");
-  const [filterStatus, setFilterStatus] = useState("all");
-  const [campaigns, setCampaigns] = useState(CAMPAIGNS);
-  const t = T[lang];
+  const [active, setActive] = useState("campaigns");
+  const [selectedCampaign, setSelectedCampaign] = useState(CAMPAIGNS[0]);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  const totalGastado = campaigns.reduce((a, c) => a + c.gastado, 0);
-  const totalConv = campaigns.reduce((a, c) => a + c.conversiones, 0);
-  const totalClics = campaigns.reduce((a, c) => a + c.clics, 0);
-  const totalImp = campaigns.reduce((a, c) => a + c.impresiones, 0);
-
-  const filtered = campaigns.filter(c => {
-    const name = lang === "es" ? c.name : c.nameEn;
-    const matchSearch = name.toLowerCase().includes(search.toLowerCase());
-    const matchFilter = filterStatus === "all" || c.status === filterStatus;
-    return matchSearch && matchFilter;
-  });
-
-  const toggleStatus = (id) => {
-    setCampaigns(prev => prev.map(c => {
-      if (c.id !== id) return c;
-      return { ...c, status: c.status === "activa" ? "pausada" : "activa" };
-    }));
-    if (selected?.id === id) {
-      setSelected(prev => ({ ...prev, status: prev.status === "activa" ? "pausada" : "activa" }));
-    }
-  };
-
-  const navItems = [
-    { id: "campaigns", icon: "📊", label: t.nav.campaigns },
-    { id: "analytics", icon: "📈", label: t.nav.analytics },
-    { id: "creatives", icon: "🎨", label: t.nav.creatives },
-    { id: "channels", icon: "🔗", label: t.nav.channels },
-    { id: "billing", icon: "💳", label: t.nav.billing },
-    { id: "settings", icon: "⚙️", label: t.nav.settings },
-  ];
-
-  const filterBtns = [
-    { id: "all", label: t.all },
-    { id: "activa", label: t.active },
-    { id: "pausada", label: t.paused },
-    { id: "borrador", label: t.draft },
-  ];
+  const L = (obj) => typeof obj === "object" ? obj[lang] : obj;
 
   return (
-    <div style={{ fontFamily: "'Inter',system-ui,sans-serif", background: "#f8f8fc", minHeight: "100vh", display: "flex" }}>
+    <div style={{ display: "flex", minHeight: "100vh", background: C.tintaDk, fontFamily: "'Segoe UI',system-ui,sans-serif", color: C.text }}>
 
-      {/* SIDEBAR */}
-      <div style={{ width: 220, background: "#26215C", display: "flex", flexDirection: "column", flexShrink: 0 }}>
-        {/* Logo */}
-        <div style={{ padding: "20px 20px 18px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
-            <div style={{ width: 32, height: 32, background: "linear-gradient(135deg,#26215C,#A32D2D)", borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, color: "white", fontSize: 15 }}>V</div>
-            <span style={{ fontWeight: 900, fontSize: 18, color: "white", letterSpacing: "-0.04em" }}>Voxa</span>
-          </div>
-        </div>
-
-        {/* Nav */}
-        <nav style={{ padding: "14px 10px", flex: 1 }}>
-          {navItems.map(item => (
-            <button key={item.id} onClick={() => setView(item.id)}
-              style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "9px 12px", borderRadius: 8, border: "none", cursor: "pointer", background: view === item.id ? "rgba(124,58,237,0.2)" : "transparent", color: view === item.id ? "#FAEEDA" : "rgba(255,255,255,0.4)", fontSize: 13, fontWeight: view === item.id ? 700 : 400, marginBottom: 2, textAlign: "left", transition: "all .15s" }}>
-              <span style={{ fontSize: 15 }}>{item.icon}</span>
-              {item.label}
-              {view === item.id && <div style={{ marginLeft: "auto", width: 4, height: 4, borderRadius: "50%", background: "#A32D2D" }} />}
-            </button>
-          ))}
-        </nav>
-
-        {/* Trial widget */}
-        <div style={{ padding: "14px 12px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-          <div style={{ background: "rgba(124,58,237,0.15)", border: "1px solid rgba(124,58,237,0.2)", borderRadius: 10, padding: "14px" }}>
-            <p style={{ fontSize: 11, color: "#A32D2D", fontWeight: 700, margin: "0 0 2px", textTransform: "uppercase", letterSpacing: "0.05em" }}>{t.plan}</p>
-            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", margin: "0 0 10px" }}>{t.planSub}</p>
-            <div style={{ background: "rgba(255,255,255,0.08)", borderRadius: 4, height: 4, marginBottom: 8 }}>
-              <div style={{ width: "60%", height: "100%", background: "linear-gradient(90deg,#A32D2D,#A32D2D)", borderRadius: 4 }} />
-            </div>
-            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", margin: "0 0 10px" }}>{t.trialEnds} <strong style={{ color: "#fbbf24" }}>18 {t.days}</strong></p>
-            <LangToggle lang={lang} setLang={setLang} />
-          </div>
-        </div>
-      </div>
-
-      {/* MAIN */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "auto", minWidth: 0 }}>
-
-        {/* TOP BAR */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px", height: 62, background: "white", borderBottom: "1px solid #e8e8f0", flexShrink: 0, gap: 12 }}>
-          <div>
-            <p style={{ fontSize: 16, fontWeight: 800, color: "#08080a", margin: 0, letterSpacing: "-0.02em" }}>
-              {navItems.find(n => n.id === view)?.label}
-            </p>
-          </div>
+      {/* ── SIDEBAR ── */}
+      <div style={{
+        width: sidebarOpen ? 220 : 64,
+        background: `linear-gradient(180deg, ${C.tinta} 0%, ${C.tintaDk} 100%)`,
+        borderRight: `1px solid ${C.border}`,
+        display: "flex", flexDirection: "column",
+        transition: "width .25s cubic-bezier(.4,0,.2,1)",
+        flexShrink: 0, position: "relative", zIndex: 10,
+      }}>
+        {/* LOGO */}
+        <div style={{ padding: "20px 16px 16px", borderBottom: `1px solid ${C.border}` }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            {view === "campaigns" && (
-              <div style={{ position: "relative" }}>
-                <input value={search} onChange={e => setSearch(e.target.value)} placeholder={t.searchPlaceholder}
-                  style={{ padding: "7px 12px 7px 32px", borderRadius: 9, border: "1px solid #e8e8f0", fontSize: 13, outline: "none", width: 200, color: "#374151", background: "#f8f8fc" }} />
-                <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "#9ca3af", fontSize: 14 }}>🔍</span>
+            <div style={{
+              width: 36, height: 36, background: C.coral,
+              borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center",
+              fontWeight: 900, fontSize: 16, color: "white", flexShrink: 0,
+              boxShadow: `0 4px 16px ${C.glow}`,
+              position: "relative",
+            }}>
+              V
+              <div style={{ position: "absolute", width: 7, height: 7, background: C.arena, borderRadius: "50%", top: -2, right: -2, animation: "pulse 2s ease-in-out infinite" }} />
+            </div>
+            {sidebarOpen && (
+              <div>
+                <p style={{ fontWeight: 900, fontSize: 17, color: "white", margin: 0, letterSpacing: "-.02em" }}>Voxa</p>
+                <p style={{ fontSize: 10, color: C.textMut, margin: 0, letterSpacing: ".08em", textTransform: "uppercase" }}>Marketing IA</p>
               </div>
             )}
-            <button onClick={() => setShowNew(true)} style={{ display: "flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg,#26215C,#A32D2D)", color: "white", border: "none", padding: "9px 18px", borderRadius: 9, fontSize: 13, fontWeight: 700, cursor: "pointer", boxShadow: "0 2px 12px rgba(91,33,182,.3)" }}>
-              {t.newCampaign}
-            </button>
-            <div style={{ width: 36, height: 36, borderRadius: "50%", background: "linear-gradient(135deg,#26215C,#A32D2D)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: "white", flexShrink: 0 }}>TU</div>
           </div>
         </div>
 
-        <div style={{ padding: "22px 24px", flex: 1 }}>
+        {/* NAV */}
+        <nav style={{ flex: 1, padding: "12px 8px", overflow: "auto" }}>
+          {NAV_ITEMS.map(item => {
+            const isActive = active === item.path;
+            return (
+              <button key={item.path} onClick={() => setActive(item.path)}
+                style={{
+                  width: "100%", display: "flex", alignItems: "center", gap: 10,
+                  padding: sidebarOpen ? "9px 12px" : "9px 0",
+                  justifyContent: sidebarOpen ? "flex-start" : "center",
+                  borderRadius: 10, border: "none", marginBottom: 2, cursor: "pointer",
+                  background: isActive ? `rgba(163,45,45,0.18)` : "transparent",
+                  transition: "all .15s",
+                }}
+                onMouseOver={e => !isActive && (e.currentTarget.style.background = C.surface2)}
+                onMouseOut={e => !isActive && (e.currentTarget.style.background = "transparent")}
+              >
+                <span style={{ fontSize: 16, flexShrink: 0 }}>{item.icon}</span>
+                {sidebarOpen && <span style={{ fontSize: 13, fontWeight: isActive ? 700 : 400, color: isActive ? C.arena : C.textSub, whiteSpace: "nowrap" }}>{L(item.label)}</span>}
+                {isActive && sidebarOpen && <div style={{ marginLeft: "auto", width: 4, height: 4, borderRadius: "50%", background: C.coral }} />}
+              </button>
+            );
+          })}
+        </nav>
 
-          {/* CAMPAIGNS VIEW */}
-          {view === "campaigns" && (
-            <>
-              {/* STATS */}
-              <div style={{ display: "flex", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
-                <StatCard label={t.stats.spent} value={`$${totalGastado}`} sub={t.stats.thisMonth} />
-                <StatCard label={t.stats.conversions} value={totalConv} sub={t.stats.allCampaigns} accent="#16a34a" />
-                <StatCard label={t.stats.clicks} value={totalClics.toLocaleString()} sub={`CTR 2.8%`} />
-                <StatCard label={t.stats.impressions} value={`${Math.round(totalImp/1000)}k`} sub={t.stats.totalReach} />
-              </div>
-
-              {/* FILTER TABS */}
-              <div style={{ display: "flex", gap: 6, marginBottom: 14 }}>
-                {filterBtns.map(fb => (
-                  <button key={fb.id} onClick={() => setFilterStatus(fb.id)}
-                    style={{ padding: "6px 14px", borderRadius: 8, border: "none", cursor: "pointer", fontSize: 12, fontWeight: 600, background: filterStatus === fb.id ? "#26215C" : "#f3f4f6", color: filterStatus === fb.id ? "white" : "#6b7280", transition: "all .15s" }}>
-                    {fb.label}
-                  </button>
-                ))}
-              </div>
-
-              {/* TABLE + DETAIL */}
-              <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
-
-                {/* TABLE */}
-                <div style={{ flex: 1.5, background: "white", border: "1px solid #e8e8f0", borderRadius: 14, overflow: "hidden", minWidth: 0 }}>
-                  <div style={{ padding: "14px 18px", borderBottom: "1px solid #f0f0f5", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <p style={{ fontSize: 13, fontWeight: 700, color: "#08080a", margin: 0 }}>{t.table.title}</p>
-                    <span style={{ fontSize: 12, color: "#9ca3af" }}>{filtered.length} {t.table.count}</span>
-                  </div>
-
-                  {filtered.length === 0 ? (
-                    <div style={{ padding: "48px 24px", textAlign: "center" }}>
-                      <p style={{ fontSize: 32, margin: "0 0 12px" }}>🔍</p>
-                      <p style={{ fontSize: 14, fontWeight: 700, color: "#08080a", margin: "0 0 6px" }}>{lang === "es" ? "Sin resultados" : "No results"}</p>
-                      <p style={{ fontSize: 13, color: "#9ca3af", margin: 0 }}>{lang === "es" ? "Intenta con otra búsqueda" : "Try a different search"}</p>
-                    </div>
-                  ) : filtered.map(c => {
-                    const name = lang === "es" ? c.name : c.nameEn;
-                    const created = lang === "es" ? c.created : c.createdEn;
-                    const sc = STATUS_STYLE[c.status];
-                    const statusLabel = t.status[c.status];
-                    return (
-                      <div key={c.id} onClick={() => setSelected(c)}
-                        style={{ display: "flex", alignItems: "center", gap: 12, padding: "13px 18px", borderBottom: "1px solid #f5f5fa", cursor: "pointer", background: selected?.id === c.id ? "#fafaf8" : "white", transition: "background .1s" }}>
-                        <div style={{ flex: 2, minWidth: 0 }}>
-                          <p style={{ fontSize: 13, fontWeight: 700, color: "#08080a", margin: "0 0 3px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{name}</p>
-                          <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-                            <span style={{ fontSize: 10, fontWeight: 700, color: CANAL_COLOR[c.canal], background: `${CANAL_COLOR[c.canal]}18`, padding: "2px 7px", borderRadius: 4 }}>{c.canal}</span>
-                            <span style={{ fontSize: 11, color: "#9ca3af" }}>{created}</span>
-                          </div>
-                        </div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                          <div style={{ width: 7, height: 7, borderRadius: "50%", background: sc.dot }} />
-                          <span style={{ fontSize: 11, fontWeight: 600, color: sc.text, background: sc.bg, padding: "3px 8px", borderRadius: 5 }}>{statusLabel}</span>
-                        </div>
-                        <div style={{ textAlign: "right", minWidth: 70 }}>
-                          <p style={{ fontSize: 13, fontWeight: 700, color: "#08080a", margin: "0 0 1px" }}>${c.gastado}</p>
-                          <p style={{ fontSize: 10, color: "#9ca3af", margin: 0 }}>{t.table.budget} ${c.presupuesto}</p>
-                        </div>
-                        <div style={{ textAlign: "right", minWidth: 60 }}>
-                          <p style={{ fontSize: 13, fontWeight: 700, color: "#16a34a", margin: "0 0 1px" }}>{c.conversiones}</p>
-                          <p style={{ fontSize: 10, color: "#9ca3af", margin: 0 }}>{t.table.convs}</p>
-                        </div>
-                        <span style={{ color: "#d1d5db", fontSize: 14 }}>›</span>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* DETAIL PANEL */}
-                {selected && (
-                  <div style={{ width: 272, background: "white", border: "1px solid #e8e8f0", borderRadius: 14, overflow: "hidden", flexShrink: 0 }}>
-                    <div style={{ padding: "16px 18px", borderBottom: "1px solid #f0f0f5" }}>
-                      <p style={{ fontSize: 13, fontWeight: 800, color: "#08080a", margin: "0 0 6px", lineHeight: 1.3 }}>{lang === "es" ? selected.name : selected.nameEn}</p>
-                      <div style={{ display: "flex", gap: 6 }}>
-                        <span style={{ fontSize: 10, fontWeight: 700, color: CANAL_COLOR[selected.canal], background: `${CANAL_COLOR[selected.canal]}18`, padding: "2px 8px", borderRadius: 4 }}>{selected.canal}</span>
-                        <span style={{ fontSize: 10, fontWeight: 600, color: STATUS_STYLE[selected.status].text, background: STATUS_STYLE[selected.status].bg, padding: "2px 8px", borderRadius: 4 }}>{t.status[selected.status]}</span>
-                      </div>
-                    </div>
-
-                    <div style={{ padding: "14px 18px" }}>
-                      <p style={{ fontSize: 10, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 12px" }}>{t.detail.performance}</p>
-
-                      {[
-                        { label: t.detail.budgetUsed, val: `$${selected.gastado} / $${selected.presupuesto}`, pct: selected.gastado / selected.presupuesto, color: "#A32D2D" },
-                        { label: t.detail.ctr, val: `${selected.ctr.toFixed(2)}%`, pct: selected.ctr / 5, color: "#16a34a" },
-                        { label: t.detail.cpa, val: selected.cpa > 0 ? `$${selected.cpa.toFixed(1)}` : "—", pct: 0.5, color: "#f59e0b" },
-                      ].map(m => (
-                        <div key={m.label} style={{ marginBottom: 14 }}>
-                          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
-                            <span style={{ fontSize: 12, color: "#6b7280" }}>{m.label}</span>
-                            <span style={{ fontSize: 12, fontWeight: 700, color: "#08080a" }}>{m.val}</span>
-                          </div>
-                          <MiniBar pct={m.pct} color={m.color} />
-                        </div>
-                      ))}
-
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 16 }}>
-                        {[
-                          { l: t.detail.impressions, v: selected.impresiones.toLocaleString() },
-                          { l: t.detail.clicks, v: selected.clics.toLocaleString() },
-                          { l: t.detail.conversions, v: selected.conversiones },
-                          { l: t.detail.created, v: lang === "es" ? selected.created : selected.createdEn },
-                        ].map(s => (
-                          <div key={s.l} style={{ background: "#fafafa", borderRadius: 8, padding: "10px 12px" }}>
-                            <p style={{ fontSize: 10, color: "#9ca3af", margin: "0 0 2px", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em" }}>{s.l}</p>
-                            <p style={{ fontSize: 14, fontWeight: 800, color: "#08080a", margin: 0 }}>{s.v}</p>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div style={{ marginTop: 16, borderTop: "1px solid #f0f0f5", paddingTop: 14 }}>
-                        <p style={{ fontSize: 10, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 10px" }}>{t.detail.activeCopies}</p>
-                        {selected.copies.map((cp, i) => (
-                          <div key={i} style={{ background: "#FFF5F0", border: "1px solid #FAEEDA", borderRadius: 9, padding: "10px 13px", marginBottom: 8 }}>
-                            <p style={{ fontSize: 12, fontWeight: 700, color: "#08080a", margin: "0 0 3px", lineHeight: 1.3 }}>{cp.titulo}</p>
-                            <p style={{ fontSize: 11, color: "#A32D2D", margin: 0, fontWeight: 600 }}>{cp.cta}</p>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div style={{ marginTop: 14, display: "flex", gap: 8 }}>
-                        <button style={{ flex: 1, padding: "9px", borderRadius: 9, border: "1px solid #e8e8f0", background: "white", fontSize: 12, fontWeight: 700, color: "#374151", cursor: "pointer" }}>{t.detail.edit}</button>
-                        <button onClick={() => toggleStatus(selected.id)}
-                          style={{ flex: 1, padding: "9px", borderRadius: 9, border: "none", background: selected.status === "activa" ? "#fef2f2" : "linear-gradient(135deg,#26215C,#A32D2D)", color: selected.status === "activa" ? "#ef4444" : "white", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
-                          {selected.status === "activa" ? t.detail.pause : t.detail.activate}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </>
-          )}
-
-          {/* OTHER VIEWS */}
-          {view !== "campaigns" && (
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 400, gap: 14 }}>
-              <div style={{ fontSize: 52 }}>
-                {view === "analytics" ? "📈" : view === "creatives" ? "🎨" : view === "channels" ? "🔗" : view === "billing" ? "💳" : "⚙️"}
-              </div>
-              <p style={{ fontSize: 18, fontWeight: 800, color: "#08080a", margin: 0 }}>
-                {navItems.find(n => n.id === view)?.label}
+        {/* PLAN */}
+        {sidebarOpen && (
+          <div style={{ padding: "12px", borderTop: `1px solid ${C.border}` }}>
+            <div style={{ background: "rgba(163,45,45,0.12)", border: `1px solid rgba(163,45,45,0.2)`, borderRadius: 12, padding: "12px" }}>
+              <p style={{ fontSize: 10, fontWeight: 700, color: C.coral, textTransform: "uppercase", letterSpacing: ".08em", margin: "0 0 4px" }}>Plan Pro</p>
+              <p style={{ fontSize: 12, color: C.textSub, margin: "0 0 8px" }}>
+                {lang === "es" ? "Prueba termina en" : "Trial ends in"} <span style={{ color: C.arena, fontWeight: 700 }}>18 {lang === "es" ? "días" : "days"}</span>
               </p>
-              <p style={{ fontSize: 14, color: "#9ca3af", margin: 0, textAlign: "center", maxWidth: 340 }}>{t.comingSoon}</p>
-              <button onClick={() => setView("campaigns")} style={{ marginTop: 8, padding: "10px 22px", background: "linear-gradient(135deg,#26215C,#A32D2D)", color: "white", border: "none", borderRadius: 9, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
-                {t.back}
+              <button style={{ width: "100%", padding: "7px", background: C.coral, border: "none", borderRadius: 8, color: "white", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+                {lang === "es" ? "Activar plan →" : "Activate plan →"}
               </button>
             </div>
-          )}
+          </div>
+        )}
+
+        {/* TOGGLE */}
+        <button onClick={() => setSidebarOpen(!sidebarOpen)}
+          style={{ position: "absolute", top: 22, right: -12, width: 24, height: 24, borderRadius: "50%", background: C.tinta, border: `1px solid ${C.border2}`, color: C.textSub, cursor: "pointer", fontSize: 10, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          {sidebarOpen ? "←" : "→"}
+        </button>
+      </div>
+
+      {/* ── MAIN ── */}
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+
+        {/* TOPBAR */}
+        <div style={{ height: 60, borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 28px", background: "rgba(26,23,48,0.8)", backdropFilter: "blur(20px)", flexShrink: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ position: "relative" }}>
+              <input placeholder={lang === "es" ? "Buscar campaña..." : "Search campaign..."} style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10, padding: "8px 14px 8px 34px", fontSize: 13, color: C.text, outline: "none", width: 220, fontFamily: "inherit" }} />
+              <span style={{ position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)", fontSize: 13, color: C.textMut }}>🔍</span>
+            </div>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            {/* LANG */}
+            <div style={{ display: "flex", background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, padding: 3, gap: 2 }}>
+              {["es","en"].map(l => (
+                <button key={l} onClick={() => setLang(l)}
+                  style={{ padding: "4px 10px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 11, fontWeight: 700, background: l === lang ? "rgba(255,255,255,0.12)" : "transparent", color: l === lang ? "white" : C.textMut, transition: "all .15s" }}>
+                  {l === "es" ? "ES" : "EN"}
+                </button>
+              ))}
+            </div>
+            {/* BELL */}
+            <button style={{ width: 36, height: 36, borderRadius: 9, background: C.surface, border: `1px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", position: "relative" }}>
+              🔔
+              <div style={{ position: "absolute", top: 6, right: 6, width: 7, height: 7, background: C.coral, borderRadius: "50%", border: `1.5px solid ${C.tintaDk}` }} />
+            </button>
+            {/* AVATAR */}
+            <div style={{ width: 36, height: 36, borderRadius: "50%", background: `linear-gradient(135deg,${C.coral},${C.tinta})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 900, color: "white", cursor: "pointer" }}>TU</div>
+          </div>
+        </div>
+
+        {/* CONTENT */}
+        <div style={{ flex: 1, overflow: "auto", padding: "28px" }}>
+
+          {/* HEADER */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 28, flexWrap: "wrap", gap: 14 }}>
+            <div>
+              <p style={{ fontSize: 11, fontWeight: 700, color: C.textMut, textTransform: "uppercase", letterSpacing: ".1em", margin: "0 0 6px" }}>
+                {lang === "es" ? "Buenos días" : "Good morning"} ✦
+              </p>
+              <h1 style={{ fontSize: 28, fontWeight: 900, color: C.text, margin: 0, letterSpacing: "-.03em", lineHeight: 1.1 }}>
+                {lang === "es" ? "Tu panel de campañas" : "Your campaign panel"}
+              </h1>
+            </div>
+            <button style={{
+              display: "flex", alignItems: "center", gap: 8,
+              padding: "12px 22px", background: C.coral, border: "none", borderRadius: 12,
+              color: "white", fontSize: 14, fontWeight: 800, cursor: "pointer",
+              boxShadow: `0 4px 20px ${C.glow}`,
+              transition: "all .2s",
+            }}
+              onMouseOver={e => { e.currentTarget.style.background = C.coralLt; e.currentTarget.style.transform = "translateY(-1px)"; }}
+              onMouseOut={e => { e.currentTarget.style.background = C.coral; e.currentTarget.style.transform = "translateY(0)"; }}
+            >
+              <span style={{ fontSize: 16 }}>⚡</span>
+              {lang === "es" ? "Nueva campaña" : "New campaign"}
+            </button>
+          </div>
+
+          {/* STATS */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 14, marginBottom: 28 }}>
+            {STATS.map((s, i) => (
+              <div key={i} style={{
+                background: C.surface, border: `1px solid ${C.border}`,
+                borderRadius: 16, padding: "20px 22px",
+                transition: "all .2s", cursor: "default",
+                position: "relative", overflow: "hidden",
+              }}
+                onMouseOver={e => { e.currentTarget.style.borderColor = C.border2; e.currentTarget.style.background = C.surface2; }}
+                onMouseOut={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.background = C.surface; }}
+              >
+                <div style={{ position: "absolute", top: -20, right: -20, width: 80, height: 80, borderRadius: "50%", background: `${s.color}08` }} />
+                <p style={{ fontSize: 22, margin: "0 0 8px" }}>{s.icon}</p>
+                <p style={{ fontSize: 30, fontWeight: 900, color: s.color, margin: "0 0 4px", letterSpacing: "-.04em" }}>{s.value}</p>
+                <p style={{ fontSize: 12, fontWeight: 600, color: C.text, margin: "0 0 3px" }}>{L(s.label)}</p>
+                <p style={{ fontSize: 11, color: C.textMut, margin: 0 }}>{s.sub}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* CAMPAIGNS */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 18, alignItems: "start" }}>
+
+            {/* LIST */}
+            <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 18, overflow: "hidden" }}>
+              <div style={{ padding: "18px 22px", borderBottom: `1px solid ${C.border}`, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <p style={{ fontSize: 14, fontWeight: 800, color: C.text, margin: 0 }}>
+                  {lang === "es" ? "Campañas activas" : "Active campaigns"}
+                  <span style={{ fontSize: 11, fontWeight: 400, color: C.textMut, marginLeft: 8 }}>{CAMPAIGNS.length} total</span>
+                </p>
+                <div style={{ display: "flex", gap: 6 }}>
+                  {["Todas","Activas","Pausadas"].map((f, i) => (
+                    <button key={f} style={{ padding: "5px 12px", borderRadius: 20, border: `1px solid ${i === 0 ? C.coral : C.border}`, background: i === 0 ? "rgba(163,45,45,0.15)" : "transparent", color: i === 0 ? C.arenaMd : C.textMut, fontSize: 11, fontWeight: i === 0 ? 700 : 400, cursor: "pointer" }}>{f}</button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                {CAMPAIGNS.map((c, i) => {
+                  const st = STATUS_CFG[c.status];
+                  const isSelected = selectedCampaign?.id === c.id;
+                  return (
+                    <div key={c.id} onClick={() => setSelectedCampaign(c)}
+                      style={{
+                        padding: "16px 22px",
+                        borderBottom: i < CAMPAIGNS.length - 1 ? `1px solid ${C.border}` : "none",
+                        cursor: "pointer", transition: "background .15s",
+                        background: isSelected ? "rgba(163,45,45,0.08)" : "transparent",
+                        borderLeft: isSelected ? `3px solid ${C.coral}` : "3px solid transparent",
+                      }}
+                      onMouseOver={e => !isSelected && (e.currentTarget.style.background = C.surface2)}
+                      onMouseOut={e => !isSelected && (e.currentTarget.style.background = "transparent")}
+                    >
+                      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                        <div style={{ width: 38, height: 38, borderRadius: 10, background: `${c.color}22`, border: `1px solid ${c.color}40`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0 }}>
+                          {c.platform === "Facebook" ? "📘" : c.platform === "Google" ? "🔍" : c.platform === "TikTok" ? "🎵" : "📣"}
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                            <p style={{ fontSize: 14, fontWeight: 700, color: C.text, margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{c.name}</p>
+                            <ScorePill score={c.score} />
+                          </div>
+                          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                            <span style={{ fontSize: 10, fontWeight: 600, color: st.color, background: st.bg, padding: "2px 8px", borderRadius: 20, display: "flex", alignItems: "center", gap: 4 }}>
+                              <span style={{ width: 5, height: 5, borderRadius: "50%", background: st.dot, display: "inline-block" }} />
+                              {st[lang]}
+                            </span>
+                            <span style={{ fontSize: 11, color: C.textMut }}>{c.platform}</span>
+                            <span style={{ fontSize: 11, color: C.textMut }}>·</span>
+                            <span style={{ fontSize: 11, color: C.textMut }}>{c.reach} {lang === "es" ? "alcance" : "reach"}</span>
+                          </div>
+                          <div style={{ marginTop: 8 }}>
+                            <BudgetBar spent={c.spent} budget={c.budget} />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* DETAIL */}
+            {selectedCampaign && (
+              <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 18, padding: "22px", overflow: "hidden", position: "relative" }}>
+                  <div style={{ position: "absolute", top: -40, right: -40, width: 140, height: 140, borderRadius: "50%", background: `${C.coral}12` }} />
+                  <div style={{ position: "relative", zIndex: 1 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 18 }}>
+                      <div>
+                        <p style={{ fontSize: 11, color: C.textMut, textTransform: "uppercase", letterSpacing: ".07em", margin: "0 0 5px" }}>{selectedCampaign.platform}</p>
+                        <h3 style={{ fontSize: 18, fontWeight: 900, color: C.text, margin: 0, letterSpacing: "-.02em" }}>{selectedCampaign.name}</h3>
+                      </div>
+                      <div style={{ background: `rgba(163,45,45,0.15)`, border: `1px solid rgba(163,45,45,0.25)`, borderRadius: 10, padding: "8px 14px", textAlign: "center" }}>
+                        <p style={{ fontSize: 22, fontWeight: 900, color: C.arenaMd, margin: 0, lineHeight: 1 }}>{selectedCampaign.score}</p>
+                        <p style={{ fontSize: 9, color: C.textMut, margin: 0, textTransform: "uppercase", letterSpacing: ".06em" }}>Score</p>
+                      </div>
+                    </div>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 18 }}>
+                      {[
+                        [lang === "es" ? "Gastado" : "Spent", `$${selectedCampaign.spent}`, C.arena],
+                        [lang === "es" ? "Presupuesto" : "Budget", `$${selectedCampaign.budget}`, C.textSub],
+                        [lang === "es" ? "Conversiones" : "Conversions", selectedCampaign.conv, "#86efac"],
+                        [lang === "es" ? "Alcance" : "Reach", selectedCampaign.reach, "#7dd3fc"],
+                      ].map(([l, v, c]) => (
+                        <div key={l} style={{ background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: "12px" }}>
+                          <p style={{ fontSize: 20, fontWeight: 900, color: c, margin: "0 0 3px", letterSpacing: "-.02em" }}>{v}</p>
+                          <p style={{ fontSize: 11, color: C.textMut, margin: 0 }}>{l}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <BudgetBar spent={selectedCampaign.spent} budget={selectedCampaign.budget} />
+                    <p style={{ fontSize: 11, color: C.textMut, marginTop: 6, textAlign: "right" }}>
+                      {Math.round((selectedCampaign.spent / selectedCampaign.budget) * 100)}% {lang === "es" ? "del presupuesto usado" : "of budget used"}
+                    </p>
+                  </div>
+                </div>
+
+                {/* QUICK ACTIONS */}
+                <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 16, padding: "18px" }}>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: C.textMut, textTransform: "uppercase", letterSpacing: ".08em", margin: "0 0 12px" }}>
+                    {lang === "es" ? "Acciones rápidas" : "Quick actions"}
+                  </p>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {[
+                      { icon: "🎯", label: lang === "es" ? "Ver Voxa Predict" : "View Voxa Predict", accent: true },
+                      { icon: "✏️", label: lang === "es" ? "Editar campaña" : "Edit campaign" },
+                      { icon: selectedCampaign.status === "active" ? "⏸️" : "▶️", label: selectedCampaign.status === "active" ? (lang === "es" ? "Pausar" : "Pause") : (lang === "es" ? "Activar" : "Activate") },
+                      { icon: "📊", label: lang === "es" ? "Ver reporte" : "View report" },
+                    ].map((a, i) => (
+                      <button key={i} style={{
+                        display: "flex", alignItems: "center", gap: 10,
+                        padding: "10px 14px", borderRadius: 10,
+                        border: a.accent ? `1px solid rgba(163,45,45,0.3)` : `1px solid ${C.border}`,
+                        background: a.accent ? "rgba(163,45,45,0.1)" : C.surface,
+                        color: a.accent ? C.arena : C.textSub,
+                        fontSize: 13, fontWeight: a.accent ? 700 : 400,
+                        cursor: "pointer", textAlign: "left", width: "100%",
+                        transition: "all .15s",
+                      }}
+                        onMouseOver={e => { e.currentTarget.style.background = C.surface2; e.currentTarget.style.color = C.text; }}
+                        onMouseOut={e => { e.currentTarget.style.background = a.accent ? "rgba(163,45,45,0.1)" : C.surface; e.currentTarget.style.color = a.accent ? C.arena : C.textSub; }}
+                      >
+                        <span>{a.icon}</span>{a.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* VOXA TIP */}
+                <div style={{ background: `linear-gradient(135deg,rgba(163,45,45,0.12),rgba(38,33,92,0.4))`, border: `1px solid rgba(163,45,45,0.2)`, borderRadius: 16, padding: "16px 18px" }}>
+                  <p style={{ fontSize: 10, fontWeight: 700, color: C.coral, textTransform: "uppercase", letterSpacing: ".08em", margin: "0 0 6px" }}>💡 Voxa tip</p>
+                  <p style={{ fontSize: 13, color: C.textSub, margin: 0, lineHeight: 1.6 }}>
+                    {lang === "es"
+                      ? "Los viernes a las 6PM generan un 34% más de clics para campañas como esta. Considera programar tu próxima publicación."
+                      : "Fridays at 6PM generate 34% more clicks for campaigns like this. Consider scheduling your next post."}
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* MODAL NUEVA CAMPAÑA */}
-      {showNew && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 200, padding: "1rem" }}>
-          <div style={{ background: "white", borderRadius: 20, padding: "32px", width: "100%", maxWidth: 440, maxHeight: "90vh", overflow: "auto" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <div style={{ width: 26, height: 26, background: "linear-gradient(135deg,#26215C,#A32D2D)", borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, color: "white", fontSize: 12 }}>V</div>
-                <p style={{ fontSize: 16, fontWeight: 800, color: "#08080a", margin: 0 }}>{t.modal.title}</p>
-              </div>
-              <button onClick={() => setShowNew(false)} style={{ background: "none", border: "none", fontSize: 22, cursor: "pointer", color: "#9ca3af", lineHeight: 1 }}>×</button>
-            </div>
-            <p style={{ fontSize: 14, color: "#6b7280", marginBottom: 24, lineHeight: 1.6 }}>{t.modal.sub}</p>
-
-            {t.modal.steps.map((step, i) => (
-              <div key={i} style={{ display: "flex", gap: 14, alignItems: "flex-start", marginBottom: 20 }}>
-                <div style={{ width: 28, height: 28, background: "linear-gradient(135deg,#26215C,#A32D2D)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "white", flexShrink: 0 }}>{i + 1}</div>
-                <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: 13, fontWeight: 700, color: "#08080a", margin: "0 0 6px" }}>{step}</p>
-                  <div style={{ height: 38, background: "#f8f8fc", border: "1px solid #e8e8f0", borderRadius: 9 }} />
-                </div>
-              </div>
-            ))}
-
-            <button onClick={() => setShowNew(false)}
-              style={{ width: "100%", padding: "14px", background: "linear-gradient(135deg,#26215C,#A32D2D)", color: "white", border: "none", borderRadius: 11, fontSize: 14, fontWeight: 800, cursor: "pointer", marginTop: 8, boxShadow: "0 4px 16px rgba(91,33,182,.3)" }}>
-              {t.modal.btn}
-            </button>
-          </div>
-        </div>
-      )}
+      <style>{`
+        @keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.5);opacity:.5} }
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+        * { box-sizing: border-box; }
+      `}</style>
     </div>
   );
 }
+
