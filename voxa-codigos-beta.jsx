@@ -1,82 +1,97 @@
 import { useState } from "react";
 
-const CODES = Array.from({ length: 100 }, (_, i) => ({
-  code: `VOXA-BETA-${String(i + 1).padStart(3, "0")}`,
-  num: i + 1,
-  status: i < 3 ? "used" : "available",
-  assignedTo: i === 0 ? "Laura Martínez" : i === 1 ? "Carlos Rodríguez" : i === 2 ? "Miguel Torres" : "",
-  assignedDate: i < 3 ? "15 Jun 2026" : "",
-  segment: i < 20 ? "Círculo cercano" : i < 60 ? "Grupos emprendedores" : i < 80 ? "Consultores políticos" : "Reserva estratégica",
-  segmentEn: i < 20 ? "Close circle" : i < 60 ? "Entrepreneur groups" : i < 80 ? "Political consultants" : "Strategic reserve",
-}));
-
 const T = {
   es: {
-    title: "Códigos Beta — Panel de control",
-    sub: "Gestiona tus 100 códigos de acceso de lanzamiento",
-    totalLabel: "Total códigos",
-    usedLabel: "Activados",
-    availableLabel: "Disponibles",
-    progressLabel: "Progreso hacia 5,000 suscriptores pagos",
-    codeLabel: "Código",
-    assignedTo: "Asignado a",
-    segment: "Segmento",
-    status: "Estado",
-    date: "Fecha",
-    available: "Disponible",
-    used: "Activado",
-    copyCode: "Copiar",
-    copied: "✓",
-    assignBtn: "Asignar",
-    searchPh: "Buscar código o nombre...",
-    filterAll: "Todos",
-    filterAvailable: "Disponibles",
-    filterUsed: "Activados",
-    segments: ["Todos los segmentos", "Círculo cercano", "Grupos emprendedores", "Consultores políticos", "Reserva estratégica"],
-    trialDays: "15 días de acceso completo",
-    includes: "Incluye todo: Generador, Modo Político, Creativos, Clone Pro, Express, ROI, Asistente",
-    generateMessage: "Generar mensaje de WhatsApp",
-    messageTemplate: (code) => `Hola! Te invito a probar Voxa — la plataforma de publicidad con IA más completa de LATAM. 🚀\n\nTe comparto tu código de acceso EXCLUSIVO:\n\n🔑 *${code}*\n\n✓ 15 días GRATIS con acceso completo\n✓ Sin tarjeta de crédito\n✓ Incluye Modo Político, Voxa Score, Clone Pro y más\n\nEntra aquí: https://voxa.ai/beta\n\n¡Solo quedan códigos limitados! 🔥`,
-    exportBtn: "⬇️ Exportar lista completa",
-    stats: "Estadísticas por segmento",
+    title: "Códigos Beta Voxa",
+    sub: "500 accesos de cortesía — 30 días de acceso completo sin costo",
+    badge: "🔑 Programa Beta Exclusivo",
+    inputLabel: "Ingresa tu código beta",
+    inputPh: "VOXA-BETA-001",
+    activateBtn: "🚀 Activar acceso beta",
+    activating: "Verificando código...",
+    successTitle: "¡Acceso beta activado!",
+    successSub: "Tienes 30 días de acceso completo a todos los módulos de Voxa — incluyendo el Modo Político.",
+    invalidMsg: "Código inválido o ya utilizado. Verifica e intenta de nuevo.",
+    features: [
+      "✅ Campañas ilimitadas por 30 días",
+      "✅ Business Brain + Autopilot + Predict",
+      "✅ Modo Político exclusivo LATAM",
+      "✅ Todos los agentes especialistas",
+      "✅ Voxa Intelligence completo",
+      "✅ Sin tarjeta de crédito requerida",
+    ],
+    statsTitle: "Estado de los códigos beta",
+    available: "Disponibles",
+    used: "Activados",
+    total: "Total",
+    adminTitle: "Panel de administración",
+    adminSub: "Gestión de los 500 códigos beta",
+    ranges: [
+      { label: "Círculo cercano", range: "001-100", qty: 100, color: "#26215C" },
+      { label: "Grupos emprendedores LATAM", range: "101-250", qty: 150, color: "#A32D2D" },
+      { label: "Consultores políticos", range: "251-350", qty: 100, color: "#0891b2" },
+      { label: "Agencias de marketing", range: "351-450", qty: 100, color: "#16a34a" },
+      { label: "Reserva estratégica", range: "451-500", qty: 50, color: "#f59e0b" },
+    ],
+    copyBtn: "Copiar código",
+    copied: "✓ Copiado",
+    downloadBtn: "📥 Descargar lista completa",
+    viewAdmin: "Ver panel admin",
+    backToActivate: "← Activar código",
   },
   en: {
-    title: "Beta Codes — Control Panel",
-    sub: "Manage your 100 launch access codes",
-    totalLabel: "Total codes",
-    usedLabel: "Activated",
-    availableLabel: "Available",
-    progressLabel: "Progress toward 5,000 paying subscribers",
-    codeLabel: "Code",
-    assignedTo: "Assigned to",
-    segment: "Segment",
-    status: "Status",
-    date: "Date",
+    title: "Voxa Beta Codes",
+    sub: "500 courtesy accesses — 30 days of full access at no cost",
+    badge: "🔑 Exclusive Beta Program",
+    inputLabel: "Enter your beta code",
+    inputPh: "VOXA-BETA-001",
+    activateBtn: "🚀 Activate beta access",
+    activating: "Verifying code...",
+    successTitle: "Beta access activated!",
+    successSub: "You have 30 days of full access to all Voxa modules — including Political Mode.",
+    invalidMsg: "Invalid or already used code. Verify and try again.",
+    features: [
+      "✅ Unlimited campaigns for 30 days",
+      "✅ Business Brain + Autopilot + Predict",
+      "✅ Exclusive Political Mode LATAM",
+      "✅ All specialist agents",
+      "✅ Full Voxa Intelligence",
+      "✅ No credit card required",
+    ],
+    statsTitle: "Beta codes status",
     available: "Available",
     used: "Activated",
-    copyCode: "Copy",
-    copied: "✓",
-    assignBtn: "Assign",
-    searchPh: "Search code or name...",
-    filterAll: "All",
-    filterAvailable: "Available",
-    filterUsed: "Activated",
-    segments: ["All segments", "Close circle", "Entrepreneur groups", "Political consultants", "Strategic reserve"],
-    trialDays: "15 days full access",
-    includes: "Includes everything: Generator, Political Mode, Creatives, Clone Pro, Express, ROI, Assistant",
-    generateMessage: "Generate WhatsApp message",
-    messageTemplate: (code) => `Hi! I'd like to invite you to try Voxa — the most complete AI advertising platform in LATAM. 🚀\n\nHere's your EXCLUSIVE access code:\n\n🔑 *${code}*\n\n✓ 15 days FREE with full access\n✓ No credit card required\n✓ Includes Political Mode, Voxa Score, Clone Pro and more\n\nEnter here: https://voxa.ai/beta\n\nLimited codes available! 🔥`,
-    exportBtn: "⬇️ Export full list",
-    stats: "Stats by segment",
+    total: "Total",
+    adminTitle: "Administration panel",
+    adminSub: "Management of 500 beta codes",
+    ranges: [
+      { label: "Close circle", range: "001-100", qty: 100, color: "#26215C" },
+      { label: "LATAM entrepreneur groups", range: "101-250", qty: 150, color: "#A32D2D" },
+      { label: "Political consultants", range: "251-350", qty: 100, color: "#0891b2" },
+      { label: "Marketing agencies", range: "351-450", qty: 100, color: "#16a34a" },
+      { label: "Strategic reserve", range: "451-500", qty: 50, color: "#f59e0b" },
+    ],
+    copyBtn: "Copy code",
+    copied: "✓ Copied",
+    downloadBtn: "📥 Download full list",
+    viewAdmin: "View admin panel",
+    backToActivate: "← Activate code",
   }
 };
+
+// Generar 500 códigos
+const CODES = Array.from({ length: 500 }, (_, i) => ({
+  code: `VOXA-BETA-${String(i + 1).padStart(3, "0")}`,
+  used: i < 3, // Simulamos 3 ya usados
+  usedBy: i < 3 ? ["Carmen R.", "Roberto L.", "Dr. Ramírez"][i] : null,
+}));
 
 function LangToggle({ lang, setLang }) {
   return (
     <div style={{ display: "flex", background: "rgba(255,255,255,0.1)", borderRadius: 8, padding: 3, gap: 2 }}>
       {["es","en"].map(l => (
         <button key={l} onClick={() => setLang(l)}
-          style={{ padding: "4px 10px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 11, fontWeight: 700, background: l === lang ? "rgba(255,255,255,0.2)" : "transparent", color: lang === l ? "white" : "rgba(255,255,255,0.5)", transition: "all .15s" }}>
+          style={{ padding: "4px 10px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 11, fontWeight: 700, background: l === lang ? "rgba(255,255,255,0.2)" : "transparent", color: "white", opacity: l === lang ? 1 : 0.5, transition: "all .15s" }}>
           {l === "es" ? "🇪🇸 ES" : "🇺🇸 EN"}
         </button>
       ))}
@@ -86,206 +101,196 @@ function LangToggle({ lang, setLang }) {
 
 export default function VoxaCodigosBeta() {
   const [lang, setLang] = useState("es");
-  const [codes, setCodes] = useState(CODES);
-  const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("all");
-  const [segFilter, setSegFilter] = useState(0);
+  const [code, setCode] = useState("");
+  const [status, setStatus] = useState(null); // null | "success" | "error"
+  const [loading, setLoading] = useState(false);
+  const [showAdmin, setShowAdmin] = useState(false);
   const [copiedCode, setCopiedCode] = useState(null);
-  const [assigning, setAssigning] = useState(null);
-  const [assignName, setAssignName] = useState("");
-  const [showMessage, setShowMessage] = useState(null);
+  const [searchCode, setSearchCode] = useState("");
   const t = T[lang];
 
-  const used = codes.filter(c => c.status === "used").length;
-  const available = codes.filter(c => c.status === "available").length;
+  const usedCount = CODES.filter(c => c.used).length;
+  const availableCount = CODES.length - usedCount;
 
-  const filtered = codes.filter(c => {
-    const name = c.code + " " + c.assignedTo;
-    const matchSearch = name.toLowerCase().includes(search.toLowerCase());
-    const matchFilter = filter === "all" || c.status === filter;
-    const seg = lang === "es" ? c.segment : c.segmentEn;
-    const matchSeg = segFilter === 0 || seg === t.segments[segFilter];
-    return matchSearch && matchFilter && matchSeg;
-  });
+  const activate = async () => {
+    if (!code.trim()) return;
+    setLoading(true);
+    await new Promise(r => setTimeout(r, 1500));
+    const found = CODES.find(c => c.code === code.toUpperCase().trim());
+    if (found && !found.used) {
+      found.used = true;
+      setStatus("success");
+    } else {
+      setStatus("error");
+    }
+    setLoading(false);
+  };
 
-  const copyCode = (code) => {
-    navigator.clipboard.writeText(code);
-    setCopiedCode(code);
+  const copyCode = (c) => {
+    navigator.clipboard.writeText(c);
+    setCopiedCode(c);
     setTimeout(() => setCopiedCode(null), 2000);
   };
 
-  const assignCode = (num) => {
-    if (!assignName.trim()) return;
-    setCodes(prev => prev.map(c => c.num === num ? { ...c, status: "used", assignedTo: assignName, assignedDate: new Date().toLocaleDateString(lang === "es" ? "es-HN" : "en-US", { day: "numeric", month: "short", year: "numeric" }) } : c));
-    setAssigning(null);
-    setAssignName("");
+  const downloadCodes = () => {
+    const content = CODES.map(c => `${c.code},${c.used ? "USADO" : "DISPONIBLE"}${c.usedBy ? `,${c.usedBy}` : ""}`).join("\n");
+    const blob = new Blob([`CÓDIGO,ESTADO,USUARIO\n${content}`], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "voxa-beta-500-codigos.csv"; a.click();
   };
 
-  const exportCSV = () => {
-    const rows = ["Código,Estado,Asignado a,Segmento,Fecha"];
-    codes.forEach(c => rows.push(`${c.code},${c.status},${c.assignedTo},${c.segment},${c.assignedDate}`));
-    const blob = new Blob([rows.join("\n")], { type: "text/csv" });
-    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "voxa-codigos-beta.csv"; a.click();
-  };
-
-  const segStats = [
-    { label: lang === "es" ? "Círculo cercano" : "Close circle", total: 20, used: codes.filter(c => c.segment === "Círculo cercano" && c.status === "used").length },
-    { label: lang === "es" ? "Grupos emprendedores" : "Entrepreneur groups", total: 40, used: codes.filter(c => c.segment === "Grupos emprendedores" && c.status === "used").length },
-    { label: lang === "es" ? "Consultores políticos" : "Political consultants", total: 20, used: codes.filter(c => c.segment === "Consultores políticos" && c.status === "used").length },
-    { label: lang === "es" ? "Reserva estratégica" : "Strategic reserve", total: 20, used: codes.filter(c => c.segment === "Reserva estratégica" && c.status === "used").length },
-  ];
+  const filtered = CODES.filter(c => searchCode ? c.code.includes(searchCode.toUpperCase()) : true);
 
   return (
-    <div style={{ fontFamily: "'Inter',system-ui,sans-serif", background: "#f5f3ef", minHeight: "100vh" }}>
+    <div style={{ fontFamily: "'Inter',system-ui,sans-serif", background: "#0D0B1A", minHeight: "100vh", color: "white" }}>
 
-      <div style={{ background: "#26215C", padding: "0 5%", height: 62, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      {/* HEADER */}
+      <div style={{ background: "linear-gradient(135deg,#26215C,#1a1730)", padding: "0 5%", height: 62, display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
           <div style={{ width: 30, height: 30, background: "#A32D2D", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, color: "white", fontSize: 14 }}>V</div>
           <span style={{ fontWeight: 900, fontSize: 17, color: "white" }}>Voxa</span>
-          <span style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>· {t.title}</span>
+          <span style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginLeft: 4 }}>{t.badge}</span>
         </div>
-        <LangToggle lang={lang} setLang={setLang} />
-      </div>
-
-      {/* STATS HEADER */}
-      <div style={{ background: "linear-gradient(135deg,#26215C,#A32D2D)", padding: "24px 5%" }}>
-        <div style={{ maxWidth: 960, margin: "0 auto" }}>
-          <div style={{ display: "flex", gap: 16, marginBottom: 20, flexWrap: "wrap" }}>
-            {[
-              { label: t.totalLabel, val: 100, color: "white" },
-              { label: t.usedLabel, val: used, color: "#FAEEDA" },
-              { label: t.availableLabel, val: available, color: "#86efac" },
-            ].map((s, i) => (
-              <div key={i} style={{ background: "rgba(255,255,255,0.1)", borderRadius: 12, padding: "16px 24px", flex: 1, minWidth: 120 }}>
-                <p style={{ fontSize: 11, color: "rgba(255,255,255,0.6)", margin: "0 0 4px", textTransform: "uppercase", letterSpacing: "0.06em" }}>{s.label}</p>
-                <p style={{ fontSize: 36, fontWeight: 900, color: s.color, margin: 0, letterSpacing: "-0.03em" }}>{s.val}</p>
-              </div>
-            ))}
-          </div>
-          <p style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", margin: "0 0 6px" }}>{t.progressLabel}</p>
-          <div style={{ background: "rgba(255,255,255,0.15)", borderRadius: 4, height: 8 }}>
-            <div style={{ width: `${(used / 5000) * 100}%`, height: "100%", background: "#FAEEDA", borderRadius: 4, minWidth: 4 }} />
-          </div>
-          <p style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", margin: "6px 0 0" }}>{used} / 5,000</p>
-        </div>
-      </div>
-
-      <div style={{ maxWidth: 960, margin: "0 auto", padding: "24px 5%" }}>
-
-        {/* SEGMENT STATS */}
-        <div style={{ display: "flex", gap: 10, marginBottom: 20, flexWrap: "wrap" }}>
-          {segStats.map((s, i) => (
-            <div key={i} style={{ flex: 1, minWidth: 160, background: "white", border: "1px solid #e8e8f0", borderRadius: 12, padding: "14px 16px" }}>
-              <p style={{ fontSize: 12, fontWeight: 700, color: "#26215C", margin: "0 0 6px" }}>{s.label}</p>
-              <div style={{ background: "#f3f4f6", borderRadius: 4, height: 5, marginBottom: 4 }}>
-                <div style={{ width: `${(s.used / s.total) * 100}%`, height: "100%", background: "#A32D2D", borderRadius: 4, minWidth: s.used > 0 ? 4 : 0 }} />
-              </div>
-              <p style={{ fontSize: 11, color: "#9ca3af", margin: 0 }}>{s.used}/{s.total} {lang === "es" ? "usados" : "used"}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* INFO BANNER */}
-        <div style={{ background: "#FFF8F0", border: "1px solid #FFD4B8", borderRadius: 12, padding: "14px 18px", marginBottom: 20, display: "flex", gap: 12, alignItems: "flex-start" }}>
-          <span style={{ fontSize: 20 }}>🎟️</span>
-          <div>
-            <p style={{ fontSize: 13, fontWeight: 700, color: "#854d0e", margin: "0 0 3px" }}>{t.trialDays}</p>
-            <p style={{ fontSize: 12, color: "#92400e", margin: 0, lineHeight: 1.5 }}>{t.includes}</p>
-          </div>
-        </div>
-
-        {/* FILTERS */}
-        <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap", alignItems: "center" }}>
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder={t.searchPh}
-            style={{ flex: 2, minWidth: 200, padding: "9px 14px", borderRadius: 9, border: "1px solid #e8e8f0", fontSize: 13, outline: "none", background: "white" }} />
-          <div style={{ display: "flex", gap: 6 }}>
-            {["all","available","used"].map((f, i) => (
-              <button key={f} onClick={() => setFilter(f)}
-                style={{ padding: "8px 14px", borderRadius: 8, border: "none", background: filter === f ? "#26215C" : "#f3f4f6", color: filter === f ? "white" : "#374151", fontSize: 12, fontWeight: filter === f ? 700 : 400, cursor: "pointer" }}>
-                {[t.filterAll, t.filterAvailable, t.filterUsed][i]}
-              </button>
-            ))}
-          </div>
-          <button onClick={exportCSV} style={{ padding: "8px 14px", borderRadius: 8, border: "1px solid #e8e8f0", background: "white", color: "#374151", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
-            {t.exportBtn}
+        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+          <button onClick={() => setShowAdmin(!showAdmin)} style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "6px 12px", cursor: "pointer" }}>
+            {showAdmin ? t.backToActivate : t.viewAdmin}
           </button>
+          <LangToggle lang={lang} setLang={setLang} />
         </div>
+      </div>
 
-        {/* CODES TABLE */}
-        <div style={{ background: "white", border: "1px solid #e8e8f0", borderRadius: 16, overflow: "hidden" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "160px 1fr 140px 100px auto", gap: 0, background: "#fafafa", borderBottom: "1px solid #f0f0f5", padding: "10px 18px" }}>
-            {[t.codeLabel, t.assignedTo, t.segment, t.status, ""].map((h, i) => (
-              <p key={i} style={{ fontSize: 11, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.05em", margin: 0 }}>{h}</p>
-            ))}
-          </div>
-          <div style={{ maxHeight: 480, overflowY: "auto" }}>
-            {filtered.slice(0, 50).map(c => (
-              <div key={c.num} style={{ display: "grid", gridTemplateColumns: "160px 1fr 140px 100px auto", gap: 0, padding: "11px 18px", borderBottom: "1px solid #f5f5f5", alignItems: "center" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <code style={{ fontSize: 12, fontWeight: 700, color: "#26215C", background: "#FFF8F0", padding: "3px 8px", borderRadius: 6 }}>{c.code}</code>
+      {!showAdmin ? (
+        /* ── PANTALLA DE ACTIVACIÓN ── */
+        <div style={{ maxWidth: 520, margin: "0 auto", padding: "60px 5%" }}>
+
+          {status === "success" ? (
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: 64, marginBottom: 20 }}>🎉</div>
+              <h2 style={{ fontSize: 26, fontWeight: 900, color: "white", margin: "0 0 10px", letterSpacing: "-.03em" }}>{t.successTitle}</h2>
+              <p style={{ fontSize: 15, color: "rgba(255,255,255,0.55)", margin: "0 0 32px", lineHeight: 1.65 }}>{t.successSub}</p>
+              <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, padding: "24px", marginBottom: 28, textAlign: "left" }}>
+                {t.features.map((f, i) => (
+                  <p key={i} style={{ fontSize: 14, color: "rgba(255,255,255,0.75)", margin: "0 0 10px", lineHeight: 1.5 }}>{f}</p>
+                ))}
+              </div>
+              <button style={{ width: "100%", padding: "15px", background: "#A32D2D", border: "none", borderRadius: 12, color: "white", fontSize: 15, fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 20px rgba(163,45,45,0.35)" }}>
+                {lang === "es" ? "Entrar a Voxa →" : "Enter Voxa →"}
+              </button>
+            </div>
+          ) : (
+            <div>
+              <div style={{ textAlign: "center", marginBottom: 40 }}>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(163,45,45,0.12)", border: "1px solid rgba(163,45,45,0.25)", borderRadius: 100, padding: "6px 16px", marginBottom: 20 }}>
+                  <span style={{ width: 7, height: 7, background: "#A32D2D", borderRadius: "50%", animation: "pulse 1.5s ease-in-out infinite", display: "inline-block" }} />
+                  <span style={{ fontSize: 12, color: "#FAEEDA", fontWeight: 600 }}>{availableCount} {lang === "es" ? "códigos disponibles" : "codes available"}</span>
                 </div>
-                <p style={{ fontSize: 13, color: c.assignedTo ? "#374151" : "#d1d5db", margin: 0 }}>{c.assignedTo || "—"}</p>
-                <p style={{ fontSize: 11, color: "#9ca3af", margin: 0 }}>{lang === "es" ? c.segment : c.segmentEn}</p>
-                <span style={{ fontSize: 11, fontWeight: 700, color: c.status === "used" ? "#16a34a" : "#A32D2D", background: c.status === "used" ? "#f0fdf4" : "#fff5f5", padding: "3px 9px", borderRadius: 20, display: "inline-block" }}>
-                  {c.status === "used" ? t.used : t.available}
-                </span>
-                <div style={{ display: "flex", gap: 6, justifyContent: "flex-end" }}>
-                  <button onClick={() => copyCode(c.code)}
-                    style={{ fontSize: 11, padding: "5px 10px", borderRadius: 7, border: "1px solid #e5e7eb", background: copiedCode === c.code ? "#f0fdf4" : "white", color: copiedCode === c.code ? "#16a34a" : "#6b7280", cursor: "pointer", fontWeight: 600 }}>
-                    {copiedCode === c.code ? t.copied : t.copyCode}
-                  </button>
-                  {c.status === "available" && (
-                    assigning === c.num ? (
-                      <div style={{ display: "flex", gap: 4 }}>
-                        <input value={assignName} onChange={e => setAssignName(e.target.value)} placeholder="Nombre..." autoFocus
-                          onKeyDown={e => e.key === "Enter" && assignCode(c.num)}
-                          style={{ width: 110, padding: "4px 8px", borderRadius: 6, border: "1px solid #e5e7eb", fontSize: 12, outline: "none" }} />
-                        <button onClick={() => assignCode(c.num)} style={{ padding: "4px 8px", borderRadius: 6, border: "none", background: "#26215C", color: "white", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>✓</button>
-                        <button onClick={() => { setAssigning(null); setAssignName(""); }} style={{ padding: "4px 8px", borderRadius: 6, border: "1px solid #e5e7eb", background: "white", color: "#9ca3af", fontSize: 11, cursor: "pointer" }}>✕</button>
-                      </div>
-                    ) : (
-                      <button onClick={() => setAssigning(c.num)}
-                        style={{ fontSize: 11, padding: "5px 10px", borderRadius: 7, border: "none", background: "#26215C", color: "white", cursor: "pointer", fontWeight: 700 }}>
-                        {t.assignBtn}
-                      </button>
-                    )
-                  )}
-                  {c.status === "available" && (
-                    <button onClick={() => setShowMessage(c.code)}
-                      style={{ fontSize: 11, padding: "5px 10px", borderRadius: 7, border: "1px solid #FAEEDA", background: "#FFF8F0", color: "#854d0e", cursor: "pointer", fontWeight: 600 }}>
-                      💬
-                    </button>
-                  )}
+                <h1 style={{ fontSize: 32, fontWeight: 900, color: "white", margin: "0 0 10px", letterSpacing: "-.04em", lineHeight: 1.1 }}>{t.title}</h1>
+                <p style={{ fontSize: 15, color: "rgba(255,255,255,0.45)", margin: 0, lineHeight: 1.6 }}>{t.sub}</p>
+              </div>
+
+              <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 18, padding: "28px", marginBottom: 20 }}>
+                <label style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.35)", display: "block", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}>{t.inputLabel}</label>
+                <input
+                  value={code}
+                  onChange={e => { setCode(e.target.value.toUpperCase()); setStatus(null); }}
+                  placeholder={t.inputPh}
+                  style={{ width: "100%", padding: "14px 16px", fontSize: 18, fontWeight: 700, letterSpacing: "0.05em", borderRadius: 12, border: status === "error" ? "2px solid #ef4444" : "1.5px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.06)", color: "white", outline: "none", fontFamily: "monospace", boxSizing: "border-box", marginBottom: 14 }}
+                  onKeyDown={e => e.key === "Enter" && activate()}
+                />
+                {status === "error" && (
+                  <p style={{ fontSize: 13, color: "#fca5a5", margin: "0 0 14px", textAlign: "center" }}>❌ {t.invalidMsg}</p>
+                )}
+                <button onClick={activate} disabled={!code.trim() || loading}
+                  style={{ width: "100%", padding: "15px", background: code.trim() && !loading ? "#A32D2D" : "rgba(255,255,255,0.08)", border: "none", borderRadius: 12, color: "white", fontSize: 15, fontWeight: 800, cursor: code.trim() && !loading ? "pointer" : "not-allowed", transition: "all .2s", boxShadow: code.trim() && !loading ? "0 4px 20px rgba(163,45,45,0.35)" : "none" }}>
+                  {loading ? (
+                    <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                      <span style={{ width: 16, height: 16, border: "2px solid rgba(255,255,255,.3)", borderTopColor: "white", borderRadius: "50%", display: "inline-block", animation: "spin .7s linear infinite" }} />
+                      {t.activating}
+                    </span>
+                  ) : t.activateBtn}
+                </button>
+              </div>
+
+              <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 14, padding: "18px 20px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 14 }}>
+                  {[[availableCount, t.available, "#86efac"], [usedCount, t.used, "#A32D2D"], [500, t.total, "rgba(255,255,255,0.4)"]].map(([n, l, c]) => (
+                    <div key={l} style={{ textAlign: "center" }}>
+                      <p style={{ fontSize: 28, fontWeight: 900, color: c, margin: "0 0 4px", letterSpacing: "-.03em" }}>{n}</p>
+                      <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", margin: 0, textTransform: "uppercase", letterSpacing: ".06em" }}>{l}</p>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ background: "rgba(255,255,255,0.06)", borderRadius: 4, height: 6, overflow: "hidden" }}>
+                  <div style={{ width: `${(usedCount / 500) * 100}%`, height: "100%", background: "#A32D2D", borderRadius: 4, transition: "width .6s" }} />
                 </div>
               </div>
-            ))}
-          </div>
-          {filtered.length > 50 && (
-            <div style={{ padding: "12px", textAlign: "center", borderTop: "1px solid #f0f0f5" }}>
-              <p style={{ fontSize: 12, color: "#9ca3af", margin: 0 }}>Mostrando 50 de {filtered.length} — usa el buscador para filtrar</p>
             </div>
           )}
         </div>
-      </div>
-
-      {/* WHATSAPP MESSAGE MODAL */}
-      {showMessage && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 200, padding: "1rem" }}>
-          <div style={{ background: "white", borderRadius: 18, padding: 28, width: "100%", maxWidth: 480 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
-              <p style={{ fontSize: 16, fontWeight: 800, color: "#26215C", margin: 0 }}>💬 {t.generateMessage}</p>
-              <button onClick={() => setShowMessage(null)} style={{ background: "none", border: "none", fontSize: 22, cursor: "pointer", color: "#9ca3af" }}>×</button>
+      ) : (
+        /* ── PANEL ADMIN ── */
+        <div style={{ maxWidth: 900, margin: "0 auto", padding: "32px 5%" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24, flexWrap: "wrap", gap: 14 }}>
+            <div>
+              <h2 style={{ fontSize: 22, fontWeight: 900, color: "white", margin: "0 0 4px", letterSpacing: "-.03em" }}>{t.adminTitle}</h2>
+              <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", margin: 0 }}>{t.adminSub}</p>
             </div>
-            <div style={{ background: "#f0fdf4", borderRadius: 12, padding: "14px 16px", fontFamily: "monospace", fontSize: 13, color: "#374151", lineHeight: 1.6, marginBottom: 16, whiteSpace: "pre-wrap" }}>
-              {t.messageTemplate(showMessage)}
-            </div>
-            <button onClick={() => { navigator.clipboard.writeText(t.messageTemplate(showMessage)); setShowMessage(null); }}
-              style={{ width: "100%", padding: "13px", borderRadius: 11, border: "none", background: "#26215C", color: "white", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
-              📋 {lang === "es" ? "Copiar y cerrar" : "Copy and close"}
+            <button onClick={downloadCodes} style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 18px", background: "#A32D2D", border: "none", borderRadius: 10, color: "white", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+              {t.downloadBtn}
             </button>
+          </div>
+
+          {/* DISTRIBUCIÓN */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))", gap: 12, marginBottom: 24 }}>
+            {t.ranges.map((r, i) => (
+              <div key={i} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 14, padding: "16px", borderLeft: `3px solid ${r.color}` }}>
+                <p style={{ fontSize: 20, fontWeight: 900, color: r.color, margin: "0 0 4px", letterSpacing: "-.02em" }}>{r.qty}</p>
+                <p style={{ fontSize: 12, fontWeight: 700, color: "white", margin: "0 0 3px" }}>{r.label}</p>
+                <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", margin: 0, fontFamily: "monospace" }}>#{r.range}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* BUSCADOR */}
+          <div style={{ marginBottom: 16 }}>
+            <input value={searchCode} onChange={e => setSearchCode(e.target.value)} placeholder="Buscar código... ej: 042"
+              style={{ width: "100%", padding: "11px 14px", fontSize: 14, borderRadius: 10, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "white", outline: "none", fontFamily: "inherit", boxSizing: "border-box" }} />
+          </div>
+
+          {/* LISTA DE CÓDIGOS */}
+          <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 16, overflow: "hidden" }}>
+            <div style={{ maxHeight: 420, overflowY: "auto" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))", gap: 8, padding: "16px" }}>
+                {filtered.slice(0, 200).map((c, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", justify: "space-between", gap: 8, padding: "8px 12px", background: c.used ? "rgba(163,45,45,0.08)" : "rgba(255,255,255,0.04)", border: `1px solid ${c.used ? "rgba(163,45,45,0.2)" : "rgba(255,255,255,0.06)"}`, borderRadius: 8 }}>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: c.used ? "rgba(255,255,255,0.3)" : "white", fontFamily: "monospace", flex: 1 }}>{c.code}</span>
+                    {c.used ? (
+                      <span style={{ fontSize: 10, color: "#fca5a5", fontWeight: 600 }}>USADO</span>
+                    ) : (
+                      <button onClick={() => copyCode(c.code)} style={{ fontSize: 10, color: copiedCode === c.code ? "#86efac" : "rgba(255,255,255,0.4)", background: "none", border: "none", cursor: "pointer", padding: 0, fontWeight: 600, whiteSpace: "nowrap" }}>
+                        {copiedCode === c.code ? "✓" : "📋"}
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+              {filtered.length > 200 && (
+                <p style={{ textAlign: "center", padding: "12px", fontSize: 12, color: "rgba(255,255,255,0.3)" }}>
+                  Mostrando 200 de {filtered.length} — usa el buscador para encontrar un código específico
+                </p>
+              )}
+            </div>
           </div>
         </div>
       )}
+
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg) } }
+        @keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.5);opacity:.5} }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+      `}</style>
     </div>
   );
 }
