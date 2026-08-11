@@ -171,7 +171,7 @@ Responde ÚNICAMENTE con este JSON válido en ${lang === "es" ? "español" : "En
       const prompts = [buildPrompt(form, "A")];
       if (showB && versionB) prompts.push(buildPrompt(versionB, "B"));
       const responses = await Promise.all(prompts.map(p =>
-        fetch("https://api.anthropic.com/v1/messages", {
+        fetch("/api/generate", {
           method: "POST", headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ model: "claude-sonnet-4-6", max_tokens: 1000, messages: [{ role: "user", content: p }] })
         }).then(r => r.json()).then(d => JSON.parse((d.content?.[0]?.text || "{}").replace(/```json|```/g, "").trim()))
